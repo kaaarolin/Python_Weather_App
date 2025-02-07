@@ -9,12 +9,10 @@ while True:
         print("Exiting program...")
         break
 
-    # Hämta väderdata från OpenWeather API
     weather_data = requests.get(
         f"https://api.openweathermap.org/data/2.5/weather?q={user_input}&units=metric&APPID={api_key}"
     )
 
-    # Kontrollera om staden finns i API:et
     if weather_data.json().get('cod') == '404':
         print('No city found, please try again.\n')
     else:
