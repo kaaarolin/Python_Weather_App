@@ -2,21 +2,24 @@ import requests
 
 api_key = '9849492db19201fcec354b5216a8a0cd'
 
-user_input = input('Enter city: ')
+while True:
+    user_input = input('Enter city (press Enter to exit): ').strip()
 
-weather_data = requests.get(
-    f"https://api.openweathermap.org/data/2.5/weather?q={user_input}&units=metric&APPID={api_key}")
-#använder request library för att hämta url och det som finns i den spara i denna variabel 
+    if user_input == "":  
+        print("Exiting program...")
+        break
 
-#print(weather_data.status_code) för att testa om url fungerar 
+    # Hämta väderdata från OpenWeather API
+    weather_data = requests.get(
+        f"https://api.openweathermap.org/data/2.5/weather?q={user_input}&units=metric&APPID={api_key}"
+    )
 
-#print(weather_data.json()) får all data som finns om vädret i json format
+    # Kontrollera om staden finns i API:et
+    if weather_data.json().get('cod') == '404':
+        print('No city found, please try again.\n')
+    else:
+        weather = weather_data.json()['weather'][0]['main']
+        temp = round(weather_data.json()['main']['temp'])
 
-if weather_data.json()['cod'] == '404':
-    print('No city found')
-else: 
-    weather = weather_data.json()['weather'][0]['main']
-    temp = round(weather_data.json()['main']['temp'])
-
-    print(f'The weather in {user_input} is {weather}')
-    print(f'The temperature is {temp}°C')
+        print(f'The weather in {user_input} is {weather}')
+        print(f'The temperature is {temp}°C\n')
